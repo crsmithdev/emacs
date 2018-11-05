@@ -1,0 +1,13 @@
+(source "elpy" "http://jorgenschaefer.github.io/packages/")
+(source gnu)
+(source marmalade)
+(source melpa)
+
+(depends-on "better-defaults")
+(depends-on "cask")
+(depends-on "color-theme-solarized")
+(depends-on "evil")
+(depends-on "nlinum-relative")
+(depends-on "org")
+(depends-on "pallet")
+(depends-on "solarized-theme")
