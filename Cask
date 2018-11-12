@@ -5,9 +5,10 @@
 
 (depends-on "better-defaults")
 (depends-on "cask")
-(depends-on "color-theme-solarized")
+(depends-on "company")
+(depends-on "counsel")
+(depends-on "doom-themes")
 (depends-on "evil")
 (depends-on "nlinum-relative")
 (depends-on "org")
 (depends-on "pallet")
-(depends-on "solarized-theme")
