@@ -12,3 +12,5 @@
 (depends-on "nlinum-relative")
 (depends-on "org")
 (depends-on "pallet")
+(depends-on "telephone-line")
+(depends-on "zerodark-theme")

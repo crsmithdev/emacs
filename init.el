@@ -4,10 +4,11 @@
 (pallet-mode t)
 
 (setq initial-frame-alist '((top . 25) (left . 840) (width . 120) (height . 81)))
-(add-to-list 'default-frame-alist '(font . "Source Code Pro-12" ))
-(set-face-attribute 'default t :font "Source Code Pro-12" )
-(set-face-attribute 'default nil :font "Source Code Pro-12" )
-(set-frame-font "Source Code Pro-12" nil t)
+(add-to-list 'default-frame-alist '(font . "Source Code Pro for Powerline-12" ))
+(add-to-list 'default-frame-alist '(ns-appearance . dark))
+(set-face-attribute 'default t :font "Source Code Pro for Powerline-12" )
+(set-face-attribute 'default nil :font "Source Code Pro for Powerline-12" )
+(set-frame-font "Source Code Pro for Powerline-12" nil t)
 
 ;; 00-bootstrap.el
 (require 'cl)
@@ -33,6 +34,8 @@
           '(lambda ()
              (delete-trailing-whitespace)))
 (fset 'yes-or-no-p 'y-or-n-p)
+(require 'all-the-icons)
+;(setq ns-use-srgb-colorspace nil)
 
 ;; 20-evil.el
 (setq evil-want-C-i-jump nil)
@@ -64,6 +67,26 @@
                                (file+headline "~/org/notes.org" "Tasks")
                                "* TODO %i%?\n%U")))
 
+;; 32-modeline.el
+(setq-default mode-line-format
+              '("%e"
+                mode-line-front-space
+                mode-line-mule-info
+                mode-line-client
+                mode-line-modified
+                mode-line-remote
+                mode-line-frame-identification
+                mode-line-buffer-identification
+                "   "
+                mode-line-position
+                evil-mode-line-tag
+                (vc-mode vc-mode)
+                "  "
+                mode-line-modes
+                mode-line-misc-info
+                mode-line-end-spaces))
+
+
 ;; 40-bindings.el
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 
@@ -75,6 +98,7 @@
             doom-themes-enable-italic t) ; if nil, italics is universally disabled
       (load-theme 'doom-vibrant t)
       (doom-themes-org-config)
+      ;(load-theme 'zerodark t)
       ;(load-theme 'solarized t)
       ;(setq solarized-termcolors 256)
       ;(set-frame-parameter nil 'background-mode 'dark)
@@ -89,7 +113,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (company doom-themes atom-one-dark-theme solarized-theme pallet nlinum-relative evil counsel color-theme-solarized better-defaults))))
+    (zerodark-theme all-the-icons-dired telephone-line company doom-themes atom-one-dark-theme solarized-theme pallet nlinum-relative evil counsel color-theme-solarized better-defaults))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
