@@ -113,7 +113,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (zerodark-theme all-the-icons-dired telephone-line company doom-themes atom-one-dark-theme solarized-theme pallet nlinum-relative evil counsel color-theme-solarized better-defaults))))
+    (use-package zerodark-theme all-the-icons-dired telephone-line company doom-themes atom-one-dark-theme solarized-theme pallet nlinum-relative evil counsel color-theme-solarized better-defaults))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
