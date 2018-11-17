@@ -1,0 +1,21 @@
+# Compiled
+*.elc
+
+# Packaging
+.cask
+
+# Backup files
+*~
+
+# Undo-tree save-files
+*.~undo-tree
+
+# Generated config
+config.el
+
+# Packages
+elpa
+
+# Other files
+.emacs.*
+
