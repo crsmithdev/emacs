@@ -18,4 +18,6 @@ elpa
 
 # Other files
 .emacs.*
+bookmarks
+history
 

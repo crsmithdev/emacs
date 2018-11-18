@@ -1,4 +1,5 @@
-* Bootstrapping
+* Init
+** Packages
 #+BEGIN_SRC emacs-lisp
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -9,15 +10,21 @@
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  (package-install 'use-package))
+  (package-install 'use-package)
+  (package-install 'diminish))
 
 (eval-when-compile
   (require 'use-package))
+#+END_SRC
 
+** Libraries
+#+BEGIN_SRC emacs-lisp
+(require 'diminish)
 (require 'cl)
 #+END_SRC
 
-* Global Settings
+* Core
+** Settings
 #+BEGIN_SRC emacs-lisp
 (use-package better-defaults
   :ensure t)
@@ -26,21 +33,13 @@
       user-mail-address "crsmithdev@gmail.com"
       inhibit-splash-screen t
       initial-scratch-message nil
-      backup-directory-alist '(("." . (concat user-emacs-directory "backups")))
-      ;backup-directory-alist '(("." . "~/.emacs.d/backups"))
       ring-bell-function 'ignore
-      visible-bell t)
+      visible-bell-function 'ignore)
       
-(tool-bar-mode 0)
-(menu-bar-mode 0)
-(scroll-bar-mode 0)
 (prefer-coding-system 'utf-8)
-(column-number-mode 1)
 (fset 'yes-or-no-p 'y-or-n-p)
-(desktop-save-mode 1)
 #+END_SRC
 
-* Essentials
 ** Evil
 #+BEGIN_SRC emacs-lisp
 (use-package evil
@@ -51,14 +50,23 @@
   (evil-mode 1))
 #+END_SRC
 
-** GUI & Theme
+** UI
 #+BEGIN_SRC emacs-lisp
+;; disable ui elements
+(tool-bar-mode 0)
+(menu-bar-mode 0)
+(scroll-bar-mode 0)
+
+;; dark mode title bar
 (add-to-list 'default-frame-alist '(ns-appearance . dark))
+
+;; fonts
 (add-to-list 'default-frame-alist '(font . "Source Code Pro-12" ))
 (set-face-attribute 'default t :font "Source Code Pro-12" )
 (set-face-attribute 'default nil :font "Source Code Pro-12" )
 (set-frame-font "Source Code Pro-12" nil t)
 
+;; theme
 (use-package doom-themes
   :ensure t
   :config
@@ -68,24 +76,56 @@
   (doom-themes-org-config))
 #+END_SRC
 
-* Configuration
-** Ivy
+* Modules
+** Backups
+#+BEGIN_SRC emacs-lisp
+;(setq backup-directory-alist '(("." . (concat user-emacs-directory "backups/"))))
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+(setq delete-old-versions -1)
+(setq version-control t)
+(setq vc-make-backup-files t)
+(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
+#+END_SRC
+
+** History
+#+BEGIN_SRC emacs-lisp
+(desktop-save-mode 1)
+(setq savehist-file (concat user-emacs-directory "history"))
+(savehist-mode 1)
+(setq history-length t)
+(setq history-delete-duplicates t)
+(setq savehist-save-minibuffer-history 1)
+(setq savehist-additional-variables
+      '(kill-ring
+        search-ring
+        regexp-search-ring))
+#+END_SRC
+
+** Completion
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
   :ensure t
+  :diminish ivy-mode
   :config
   (ivy-mode 1))
-#+END_SRC
 
-** Company
-#+BEGIN_SRC emacs-lisp
 (use-package company
   :ensure t
+  :diminish company-mode
   :config
   (add-hook 'after-init-hook 'global-company-mode))
 #+END_SRC
 
-** Nlinum
+** Undo
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree
+  :ensure t
+  :diminish undo-tree-mode
+  :config
+  (add-hook 'after-init-hook 'global-undo-tree-mode))
+#+END_SRC
+
+** Line Numbers
 #+BEGIN_SRC emacs-lisp
 (use-package nlinum-relative
   :ensure t
@@ -97,45 +137,74 @@
   (global-nlinum-relative-mode))
 #+END_SRC
 
-** Icons
+** Parentheses
 #+BEGIN_SRC emacs-lisp
-(use-package all-the-icons
-  :ensure t)
+(use-package smartparens
+  :ensure t
+  :config
+  (require 'smartparens-config)
+  (smartparens-global-mode 1))
 #+END_SRC
-** Org
+
+** Org Mode
 #+BEGIN_SRC emacs-lisp
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cb" 'org-switchb)
-(setq org-log-done t)
-(setq org-startup-indented t)
-(setq org-capture-templates '(("t" "Todo" entry
-                               (file+headline "~/org/notes.org" "Tasks")
-                               "* TODO %i%?\n%U")))
+(use-package org
+  :ensure t
+  ;:diminish (org-indent-mode . " ORGMODE ")
+  :config
+  (global-set-key "\C-cl" 'org-store-link)
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cc" 'org-capture)
+  (global-set-key "\C-cb" 'org-switchb)
+  (eval-after-load 'org-indent '(diminish 'org-indent-mode))
+  (setq org-log-done t)
+  (setq org-startup-indented t)
+  (setq org-capture-templates '(("t" "Todo" entry
+    (file+headline "~/org/notes.org" "Tasks")
+                                 "* TODO %i%?\n%U"))))
 #+END_SRC
 
 ** Modeline
 #+BEGIN_SRC emacs-lisp
-(setq-default mode-line-format
-              '("%e"
-                mode-line-front-space
-                mode-line-mule-info
-                mode-line-client
-                mode-line-modified
-                mode-line-remote
-                mode-line-frame-identification
-                mode-line-buffer-identification
-                "   "
-                mode-line-position
-                evil-mode-line-tag
-                (vc-mode vc-mode)
-                "  "
-                mode-line-modes
-                mode-line-misc-info
-                mode-line-end-spaces))
-#+END_SRC
+(column-number-mode 1)
 
+(use-package all-the-icons
+  :demand
+  :init
+  (progn (defun -custom-modeline-git-vc ()
+           (let ((branch (mapconcat 'concat (cdr (split-string vc-mode "[:-]")) "-")))
+             (concat
+              (propertize (format " %s" (all-the-icons-octicon "git-branch"))
+                          'face `(:height 1 :family ,(all-the-icons-octicon-family))
+                          'display '(raise 0))
+              (propertize (format " %s" branch))
+              (propertize "  "))))
+
+         (defvar mode-line-my-vc
+           '(:propertize
+             (:eval (when vc-mode
+                      (cond
+                       ((string-match "Git[:-]" vc-mode) (-custom-modeline-git-vc))
+                       (t (format "%s" vc-mode)))))
+             face mode-line-directory)
+           "Formats the current directory."))
+  :config
+  (progn (setq-default mode-line-format
+                   (list
+                    evil-mode-line-tag
+                    mode-line-front-space
+                    mode-line-mule-info
+                    mode-line-modified
+                    mode-line-frame-identification
+                    mode-line-buffer-identification
+                    " "
+                    mode-line-position
+                    mode-line-my-vc
+                    mode-line-modes))
+     ;(concat evil-mode-line-tag)
+    ))
+
+#+END_SRC
 ** Bindings
 #+BEGIN_SRC emacs-lisp
 (global-set-key "\C-x\C-m" 'execute-extended-command)
