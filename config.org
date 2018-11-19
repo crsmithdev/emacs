@@ -35,7 +35,7 @@
       initial-scratch-message nil
       ring-bell-function 'ignore
       visible-bell-function 'ignore)
-      
+
 (prefer-coding-system 'utf-8)
 (fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
@@ -125,6 +125,15 @@
   (add-hook 'after-init-hook 'global-undo-tree-mode))
 #+END_SRC
 
+** File Browser
+#+BEGIN_SRC emacs-lisp
+(use-package ranger
+  :ensure t)
+  ;:bind (("C-x d" . deer))
+  ;:config
+  ;(ranger-override-dired-mode t))
+#+END_SRC
+
 ** Line Numbers
 #+BEGIN_SRC emacs-lisp
 (use-package nlinum-relative
@@ -141,6 +150,7 @@
 #+BEGIN_SRC emacs-lisp
 (use-package smartparens
   :ensure t
+  :diminish smartparens-mode
   :config
   (require 'smartparens-config)
   (smartparens-global-mode 1))
@@ -150,18 +160,22 @@
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :ensure t
-  ;:diminish (org-indent-mode . " ORGMODE ")
   :config
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
   (global-set-key "\C-cc" 'org-capture)
   (global-set-key "\C-cb" 'org-switchb)
   (eval-after-load 'org-indent '(diminish 'org-indent-mode))
+  (setq org-src-preserve-indentation nil
+        org-edit-src-content-indentation 0)
+
+
   (setq org-log-done t)
   (setq org-startup-indented t)
   (setq org-capture-templates '(("t" "Todo" entry
     (file+headline "~/org/notes.org" "Tasks")
                                  "* TODO %i%?\n%U"))))
+
 #+END_SRC
 
 ** Modeline
